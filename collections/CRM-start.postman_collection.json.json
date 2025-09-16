@@ -1,0 +1,3626 @@
+{
+	"info": {
+		"_postman_id": "bcf77447-9828-4fb5-953c-3257342a389a",
+		"name": "CRM — старт",
+		"description": "Набор прикладных API-тестов для CRM: логин, листинг лидов, создание/обновление, получение по id и негативные кейсы.  \nПеременные берутся из окружения `CRM Test`. Токен и заголовки подставляются коллекционным Pre-request (в самих запросах Auth выключен).  \nПервым шагом в каждой папке идёт `Auth (setup)`. Экспортируем окружение без секретов в Initial.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47990666",
+		"_collection_link": "https://j-soloveva-6076713.postman.co/workspace/e3d5085e-75f7-4054-94f6-9e94325b1a5f/collection/47990666-bcf77447-9828-4fb5-953c-3257342a389a?action=share&source=collection_link&creator=47990666"
+	},
+	"item": [
+		{
+			"name": "Leads — create (on-demand)",
+			"item": [
+				{
+					"name": "Auth (setup)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"login 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"token\", j.token || j.access_token);\r",
+									"\r",
+									"pm.test(\"token сохранён\", () => pm.expect(pm.environment.get(\"token\")).to.exist);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; _ym_isad=2; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; _ym_visorc=w; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{login}}\",\"password\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authURL}}/api/v1/login",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200/201 на создание\", () => pm.expect([200,201]).to.include(pm.response.code));\r",
+									"\r",
+									"const j  = pm.response.json();\r",
+									"const id = j.data?.id ?? j.id;\r",
+									"pm.environment.set(\"leadId\", String(id));\r",
+									"pm.test(\"leadId сохранён\", () => pm.expect(id).to.exist);\r",
+									"\r",
+									"const obj = j.data ?? j;\r",
+									"pm.test(\"Привязка к personId корректна\", () => {\r",
+									"  const pid = obj.person?.id ?? obj.personId;\r",
+									"  pm.expect(String(pid)).to.eql(String(pm.environment.get(\"personId\")));\r",
+									"});\r",
+									"pm.test(\"Ответственный установлен\", () => {\r",
+									"  pm.expect(String(obj.responsibleUserId)).to.eql(String(pm.environment.get(\"responsibleUserId\")));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"personId\": {{personId}},\r\n  \"responsibleUserId\": {{responsibleUserId}},\r\n  \"comment\": \"AUTOTEST {{uniq}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead"
+							]
+						},
+						"description": "Generated from cURL: curl 'https://crm-backend-test.anflat.ru/api/v1/lead' \\\r\n  -H 'accept: application/json, text/plain, */*' \\\r\n  -H 'accept-language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7' \\\r\n  -H 'authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw' \\\r\n  -H 'cache-control: no-cache' \\\r\n  -H 'content-type: application/json' \\\r\n  -b 'tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w' \\\r\n  -H 'origin: https://crm-test.anflat.ru' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://crm-test.anflat.ru/' \\\r\n  -H 'sec-ch-ua: \"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-site' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36' \\\r\n  -H 'x-commit-tag: 5d2cc8cf' \\\r\n  -H 'x-requested-with: XMLHttpRequest' \\\r\n  -H 'x-user-id: 49' \\\r\n  --data-raw '{\"personId\":104,\"comment\":null,\"responsibleUserId\":49,\"id\":null,\"status\":null,\"source\":null,\"createdAt\":null,\"updatedAt\":null,\"name\":null,\"plannedChronology\":[],\"extService\":null,\"extId\":null,\"creatorId\":null,\"adsCampaignId\":null,\"deal\":null,\"utm\":null}'"
+					},
+					"response": []
+				},
+				{
+					"name": "verify",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код 200\", () => pm.response.to.have.status(200));\r",
+									"pm.test(\"Ответ JSON\", () => pm.response.to.be.json);\r",
+									"\r",
+									"// СХЕМУ ВСТАВЬ СЮДА (вместо ...):\r",
+									"const schema = \r",
+									"{\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"data\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"id\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"person\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"id\": {\r",
+									"              \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"surname\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"name\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"fatherName\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"gender\": {\r",
+									"              \"type\": \"object\",\r",
+									"              \"properties\": {\r",
+									"                \"label\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"value\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                }\r",
+									"              },\r",
+									"              \"required\": [\r",
+									"                \"label\",\r",
+									"                \"value\"\r",
+									"              ]\r",
+									"            },\r",
+									"            \"birthDate\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"phones\": {\r",
+									"              \"type\": \"array\",\r",
+									"              \"items\": {\r",
+									"                \"type\": \"object\",\r",
+									"                \"properties\": {\r",
+									"                  \"id\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                  },\r",
+									"                  \"phone\": {\r",
+									"                    \"type\": \"integer\"\r",
+									"                  },\r",
+									"                  \"main\": {\r",
+									"                    \"type\": \"boolean\"\r",
+									"                  }\r",
+									"                },\r",
+									"                \"required\": [\r",
+									"                  \"id\",\r",
+									"                  \"phone\",\r",
+									"                  \"main\"\r",
+									"                ]\r",
+									"              }\r",
+									"            },\r",
+									"            \"additionalContacts\": {\r",
+									"              \"type\": \"array\",\r",
+									"              \"items\": {}\r",
+									"            },\r",
+									"            \"badPassport\": {\r",
+									"              \"type\": [\r",
+									"                \"null\",\r",
+									"                \"string\"\r",
+									"              ]\r",
+									"            },\r",
+									"            \"confirmed\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"createdAt\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"updatedAt\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"plannedChronology\": {\r",
+									"              \"type\": [\r",
+									"                \"null\",\r",
+									"                \"string\"\r",
+									"              ]\r",
+									"            },\r",
+									"            \"blackList\": {\r",
+									"              \"type\": [\r",
+									"                \"null\",\r",
+									"                \"string\"\r",
+									"              ]\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"id\",\r",
+									"            \"surname\",\r",
+									"            \"name\",\r",
+									"            \"fatherName\",\r",
+									"            \"gender\",\r",
+									"            \"birthDate\",\r",
+									"            \"phones\",\r",
+									"            \"additionalContacts\",\r",
+									"            \"badPassport\",\r",
+									"            \"confirmed\",\r",
+									"            \"createdAt\",\r",
+									"            \"updatedAt\",\r",
+									"            \"plannedChronology\",\r",
+									"            \"blackList\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"responsibleUserId\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"status\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"id\": {\r",
+									"              \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"name\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"code\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"active\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"system\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"stage\": {\r",
+									"              \"type\": \"object\",\r",
+									"              \"properties\": {\r",
+									"                \"label\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                },\r",
+									"                \"value\": {\r",
+									"                  \"type\": \"string\"\r",
+									"                }\r",
+									"              },\r",
+									"              \"required\": [\r",
+									"                \"label\",\r",
+									"                \"value\"\r",
+									"              ]\r",
+									"            },\r",
+									"            \"color\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"sort\": {\r",
+									"              \"type\": \"integer\"\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"id\",\r",
+									"            \"name\",\r",
+									"            \"code\",\r",
+									"            \"active\",\r",
+									"            \"system\",\r",
+									"            \"stage\",\r",
+									"            \"color\",\r",
+									"            \"sort\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"source\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"id\": {\r",
+									"              \"type\": \"integer\"\r",
+									"            },\r",
+									"            \"name\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"code\": {\r",
+									"              \"type\": \"string\"\r",
+									"            },\r",
+									"            \"active\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"system\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"id\",\r",
+									"            \"name\",\r",
+									"            \"code\",\r",
+									"            \"active\",\r",
+									"            \"system\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"comment\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"createdAt\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"updatedAt\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"name\": {\r",
+									"          \"type\": \"string\"\r",
+									"        },\r",
+									"        \"plannedChronology\": {\r",
+									"          \"type\": [\r",
+									"            \"null\",\r",
+									"            \"string\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"extService\": {\r",
+									"          \"type\": [\r",
+									"            \"null\",\r",
+									"            \"string\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"extId\": {\r",
+									"          \"type\": [\r",
+									"            \"null\",\r",
+									"            \"string\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"creatorId\": {\r",
+									"          \"type\": \"integer\"\r",
+									"        },\r",
+									"        \"adsCampaignId\": {\r",
+									"          \"type\": [\r",
+									"            \"null\",\r",
+									"            \"string\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"deal\": {\r",
+									"          \"type\": [\r",
+									"            \"null\",\r",
+									"            \"string\"\r",
+									"          ]\r",
+									"        },\r",
+									"        \"utm\": {\r",
+									"          \"type\": [\r",
+									"            \"null\",\r",
+									"            \"string\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"id\",\r",
+									"        \"person\",\r",
+									"        \"responsibleUserId\",\r",
+									"        \"status\",\r",
+									"        \"source\",\r",
+									"        \"comment\",\r",
+									"        \"createdAt\",\r",
+									"        \"updatedAt\",\r",
+									"        \"name\",\r",
+									"        \"plannedChronology\",\r",
+									"        \"extService\",\r",
+									"        \"extId\",\r",
+									"        \"creatorId\",\r",
+									"        \"adsCampaignId\",\r",
+									"        \"deal\",\r",
+									"        \"utm\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"permissions\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"entity\": {\r",
+									"          \"type\": \"object\",\r",
+									"          \"properties\": {\r",
+									"            \"read\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"create\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"update\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"delete\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"createListUser\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            },\r",
+									"            \"updateListUser\": {\r",
+									"              \"type\": \"boolean\"\r",
+									"            }\r",
+									"          },\r",
+									"          \"required\": [\r",
+									"            \"read\",\r",
+									"            \"create\",\r",
+									"            \"update\",\r",
+									"            \"delete\",\r",
+									"            \"createListUser\",\r",
+									"            \"updateListUser\"\r",
+									"          ]\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"entity\"\r",
+									"      ]\r",
+									"    },\r",
+									"    \"dictionary\": {\r",
+									"      \"type\": \"object\",\r",
+									"      \"properties\": {\r",
+									"        \"adsCampaign\": {\r",
+									"          \"type\": \"array\",\r",
+									"          \"items\": {\r",
+									"            \"type\": \"object\",\r",
+									"            \"properties\": {\r",
+									"              \"label\": {\r",
+									"                \"type\": \"string\"\r",
+									"              },\r",
+									"              \"value\": {\r",
+									"                \"type\": \"integer\"\r",
+									"              }\r",
+									"            },\r",
+									"            \"required\": [\r",
+									"              \"label\",\r",
+									"              \"value\"\r",
+									"            ]\r",
+									"          }\r",
+									"        }\r",
+									"      },\r",
+									"      \"required\": [\r",
+									"        \"adsCampaign\"\r",
+									"      ]\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"data\",\r",
+									"    \"permissions\",\r",
+									"    \"dictionary\"\r",
+									"  ]\r",
+									"} ;\r",
+									"\r",
+									"pm.test(\"Схема ответа валидна\", () => {\r",
+									"  pm.response.to.have.jsonSchema(schema);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Время ответа < 1000ms\", () => {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Ответ не > 500KB\", () => {\r",
+									"  const len = +(pm.response.headers.get('Content-Length') || 0);\r",
+									"  // если заголовка нет — мягко считаем по длине текста (не идеально, но ок)\r",
+									"  const approx = len || (pm.response.text()?.length || 0);\r",
+									"  pm.expect(approx).to.be.below(500 * 1024);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{leadId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{leadId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200/204 OK на update\", () => pm.expect([200,204]).to.include(pm.response.code));\r",
+									"\r",
+									"let j; try { j = pm.response.json(); } catch(e) { j = null; }\r",
+									"if (j) {\r",
+									"  const comment = j?.data?.comment ?? j?.comment ?? \"\";\r",
+									"  pm.test(\"Комментарий обновлён (AUTOTEST)\", () => pm.expect(String(comment)).to.include(\"AUTOTEST\"));\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{leadId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{leadId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Создание нового лида, когда нужен полноценный сценарий.  \nPOST создаёт запись и сохраняет её id в переменную окружения `leadId` → GET проверяет по этому id → (опционально) PUT обновляет поля.  \nПодходит для ручной проверки и демонстрации полного потока.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (!pm.environment.get('RUN_ID')) {\r",
+							"  const ts = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);\r",
+							"  pm.environment.set('RUN_ID', ts);\r",
+							"}\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Leads — negative",
+			"item": [
+				{
+					"name": "Auth (setup)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"login 200\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"token\", j.token || j.access_token);\r",
+									"pm.test(\"токен сохранён\", () => pm.expect(pm.environment.get(\"token\")).to.exist);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; _ym_isad=2; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; _ym_visorc=w; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{login}}\",\"password\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authURL}}/api/v1/login",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "без токена → 401",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"401 без токена\", () => pm.response.to.have.status(401));\r",
+									"const txt = pm.response.text() || \"\";\r",
+									"let msg = txt;\r",
+									"try { const j = pm.response.json(); msg = j.message || j.error || JSON.stringify(j); } catch(e){}\r",
+									"pm.test(\"Сообщение понятное\", () => pm.expect((msg || \"\").toLowerCase()).to.match(/unauthor|нет доступа|не автор/i));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Идём без авторизации и без куков\r",
+									"pm.request.headers.remove('Authorization');\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableCookies": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{SEED_LEAD_ID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{SEED_LEAD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "422 на неверный stage",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Код == 422\", () => pm.response.to.have.status(422));\r",
+									"// Сообщение об ошибке: JSON или текст\r",
+									"const raw = pm.response.text() || \"\";\r",
+									"let msg = raw;\r",
+									"try { const j = pm.response.json(); msg = j.message || j.error || JSON.stringify(j); } catch(e){}\r",
+									"pm.test(\"Ошибка описана\", () => pm.expect((msg || \"\").toLowerCase()).to.match(/stage|параметр|валид/i));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1Njk3NzE5OC4xNDA0MjUsImV4cCI6MTc1NzE0OTk5OC4xNDA0MjV9.QSSSb-XoDgg2cZHQ5bzXBxlwk_otzqXgQVjce8uPUKw; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; _ym_isad=2; firstVisitId=2398; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "https://crm-backend-test.anflat.ru/api/v1/lead/list?stage=unknowm&sortDirection=desc&sortField=createdAt&limit=250",
+							"protocol": "https",
+							"host": [
+								"crm-backend-test",
+								"anflat",
+								"ru"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "unknowm"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "limit",
+									"value": "250"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "404 (или 422) на плохой id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Код корректный для плохого id\r",
+									"pm.test(\"404/422 на плохой id\", () => pm.expect([404, 422]).to.include(pm.response.code));\r",
+									"\r",
+									"// Соберём человекочитаемое сообщение из JSON/текста/HTML\r",
+									"const ct  = pm.response.headers.get('Content-Type') || '';\r",
+									"const raw = pm.response.text() || '';\r",
+									"let msg   = raw;\r",
+									"\r",
+									"try {\r",
+									"  const j = pm.response.json();\r",
+									"  msg = j.message || j.error || JSON.stringify(j);\r",
+									"} catch(e) { /* не JSON — оставим raw */ }\r",
+									"\r",
+									"const m = (msg || \"\").toLowerCase();\r",
+									"const looksHtml = /<html|<body/i.test(raw) || ct.includes('text/html');\r",
+									"\r",
+									"// Гибкая проверка: JSON-сообщение ИЛИ дефолтная страничка 404\r",
+									"pm.test(\"Ошибка описана (JSON/текст/HTML)\", () => {\r",
+									"  const ok =\r",
+									"    /id|формат|не найден|invalid|not\\s*found|page\\s*not\\s*found/i.test(m)   // JSON/текст\r",
+									"    || (looksHtml && /not\\s*found|страниц[аы]\\s*не\\s*найден[аы]?/i.test(m)); // HTML 404\r",
+									"  pm.expect(ok, `msg: ${m}`).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// На всякий случай выведем в консоль, чтобы быстро видеть реальные тексты\r",
+									"console.info(\"404 body/parsed message:\", msg);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/abc",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"abc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Body.id ≠ path id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"pathId\", String(pm.environment.get(\"SEED_LEAD_ID\")));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200/204 OK на update (или контрактное 4xx)\", () => {\r",
+									"  pm.expect([200,204,400,409,422]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Если сервер вернул объект — убеждаемся, что обновился именно pathId\r",
+									"try {\r",
+									"  const j = pm.response.json();\r",
+									"  const returnedId = j.data?.id || j.id;\r",
+									"  if (returnedId !== undefined) {\r",
+									"    pm.test(\"Из ответа виден id из path (а не body.id)\", () => {\r",
+									"      pm.expect(String(returnedId)).to.eql(pm.variables.get(\"pathId\"));\r",
+									"    });\r",
+									"  } else {\r",
+									"    pm.test(\"Ответ без объекта — скипаем проверку id\", () => pm.expect(true).to.be.true);\r",
+									"  }\r",
+									"} catch(e) {\r",
+									"  pm.test(\"Ответ не JSON — скипаем проверку id\", () => pm.expect(true).to.be.true);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 999999,\r\n  \"personId\": {{personId}},\r\n  \"responsibleUserId\": {{responsibleUserId}},\r\n  \"comment\": \"NEG mismatch {{uniq}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{SEED_LEAD_ID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{SEED_LEAD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create — personId неизвестный → 422/404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"422 или 404 на несуществующий personId\", () => {\r",
+									"  pm.expect([422,404]).to.include(pm.response.code);\r",
+									"});\r",
+									"const raw = pm.response.text() || \"\";\r",
+									"let msg = raw; try { const j = pm.response.json(); msg = j.message || j.error || JSON.stringify(j); } catch(e){}\r",
+									"pm.test(\"Сообщение есть\", () => pm.expect((msg || \"\").toLowerCase()).to.match(/personid|не существ|not found|некоррект/i));\r",
+									"// Не создан\r",
+									"try { pm.test(\"id не вернули\", () => pm.expect(pm.response.json().data?.id).to.not.exist); } catch(e){ pm.expect(true).to.be.true; }\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"personId\": {{BAD_PERSON_ID}},\r\n  \"responsibleUserId\": {{responsibleUserId}},\r\n  \"comment\": \"NEG bad personId {{uniq}}\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead"
+							]
+						},
+						"description": "Generated from cURL: curl 'https://crm-backend-test.anflat.ru/api/v1/lead' \\\r\n  -H 'accept: application/json, text/plain, */*' \\\r\n  -H 'accept-language: ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7' \\\r\n  -H 'authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw' \\\r\n  -H 'cache-control: no-cache' \\\r\n  -H 'content-type: application/json' \\\r\n  -b 'tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NjgwMzk1MC45MTczNTcsImV4cCI6MTc1Njk3Njc1MC45MTczNTd9.8PeipL1RuSzzrkHRPVMeMkqWEUSwDdjB1tWwIHY6rEw; _ym_isad=2; _ym_visorc=w' \\\r\n  -H 'origin: https://crm-test.anflat.ru' \\\r\n  -H 'priority: u=1, i' \\\r\n  -H 'referer: https://crm-test.anflat.ru/' \\\r\n  -H 'sec-ch-ua: \"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"' \\\r\n  -H 'sec-ch-ua-mobile: ?0' \\\r\n  -H 'sec-ch-ua-platform: \"Windows\"' \\\r\n  -H 'sec-fetch-dest: empty' \\\r\n  -H 'sec-fetch-mode: cors' \\\r\n  -H 'sec-fetch-site: same-site' \\\r\n  -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36' \\\r\n  -H 'x-commit-tag: 5d2cc8cf' \\\r\n  -H 'x-requested-with: XMLHttpRequest' \\\r\n  -H 'x-user-id: 49' \\\r\n  --data-raw '{\"personId\":104,\"comment\":null,\"responsibleUserId\":49,\"id\":null,\"status\":null,\"source\":null,\"createdAt\":null,\"updatedAt\":null,\"name\":null,\"plannedChronology\":[],\"extService\":null,\"extId\":null,\"creatorId\":null,\"adsCampaignId\":null,\"deal\":null,\"utm\":null}'"
+					},
+					"response": []
+				}
+			],
+			"description": "Leads — negative\n\nПлохие сценарии, где API должно отказать и внятно объяснить почему:  \n• 401 без токена (ручки реально закрыты)  \n• 422 на неверные query (stage в list)  \n• 404/422 на плохой id (getById)  \n• PUT: id в body ≠ id в path (контракт приоритетов)  \n• POST: personId=null → 422  \n• POST: personId не существует → 422/404\n\nПравила:  \n• Для 422/404 работаем с корректной авторизацией (Auth идёт первым).  \n• Для 401 — спец. запрос без токена и с отключённым cookie jar.  \n• Ничего лишнего не создаём; сид `SEED_LEAD_ID` используем, когда нужен существующий объект.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "list (csv)",
+			"item": [
+				{
+					"name": "Auth (setup)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"login 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"token\", j.token || j.access_token);\r",
+									"\r",
+									"pm.test(\"token сохранён\", () => pm.expect(pm.environment.get(\"token\")).to.exist);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; _ym_isad=2; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; _ym_visorc=w; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{login}}\",\"password\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authURL}}/api/v1/login",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "leadList",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const st  = pm.iterationData.get('stage');\r",
+									"const sf  = pm.iterationData.get('sortField');\r",
+									"const sd  = pm.iterationData.get('sortDirection');\r",
+									"const lim = pm.iterationData.get('limit');\r",
+									"\r",
+									"if (st === undefined || st === null || String(st).trim() === '') {\r",
+									"  pm.request.removeQueryParams('stage');\r",
+									"} else {\r",
+									"  pm.environment.set('stage', st);\r",
+									"}\r",
+									"\r",
+									"pm.environment.set('sortField', (sf && String(sf).trim()) ? sf : 'createdAt');\r",
+									"pm.environment.set('sortDirection', (sd && String(sd).trim()) ? sd : 'desc');\r",
+									"\r",
+									"if (lim !== undefined && lim !== null && String(lim).trim() !== '') {\r",
+									"  pm.environment.set('limit', Math.max(1, Math.min(250, Number(lim))));\r",
+									"} else {\r",
+									"  pm.environment.set('limit', 50);\r",
+									"}\r",
+									"\r",
+									"// страховка на заголовок\r",
+									"if (!pm.request.headers.has('Authorization')) {\r",
+									"  pm.request.headers.add({ key: 'Authorization', value: 'Bearer ' + pm.environment.get('token') });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// ожидаемый код из CSV (expCode), иначе 200\r",
+									"function readExp() {\r",
+									"  const keys = [\"expCode\",\"expected_code\",\"code\",\"expected\"];\r",
+									"  for (const k of keys) {\r",
+									"    const v = Number(pm.iterationData.get(k));\r",
+									"    if (Number.isFinite(v)) return v;\r",
+									"  }\r",
+									"  return 200;\r",
+									"}\r",
+									"const exp = readExp();\r",
+									"pm.test(`Код == ${exp}`, () => pm.expect(pm.response.code).to.eql(exp));\r",
+									"\r",
+									"const code = pm.response.code;\r",
+									"const ct = (pm.response.headers.get('Content-Type') || '').toLowerCase();\r",
+									"\r",
+									"// успех: 2xx → проверяем, что пришёл список/объект\r",
+									"if (code >= 200 && code < 300) {\r",
+									"  if (ct.includes('json')) {\r",
+									"    let j; try { j = pm.response.json(); } catch(e) { pm.expect.fail('Ответ не JSON'); }\r",
+									"    pm.test('Ответ — массив или объект со списком', () => {\r",
+									"      const data = j?.data ?? j?.items ?? j;\r",
+									"      pm.expect(Array.isArray(data) || typeof data === 'object', 'ожидаем массив или объект').to.be.true;\r",
+									"    });\r",
+									"  } else {\r",
+									"    pm.test('Ответ не пустой (текст)', () => pm.expect(/\\S/.test(pm.response.text()||\"\")).to.be.true);\r",
+									"  }\r",
+									"}\r",
+									"\r",
+									"// ошибка: 4xx/5xx → описание присутствует (широкая проверка)\r",
+									"if (code >= 400) {\r",
+									"  pm.test(\"Ошибка описана (JSON/текст)\", () => {\r",
+									"    const raw = pm.response.text() || \"\";\r",
+									"\r",
+									"    function findMessage(x) {\r",
+									"      if (!x || typeof x !== 'object') return null;\r",
+									"      const keys = [\"message\",\"detail\",\"error\",\"error_description\",\"reason\",\"title\",\"errors\"];\r",
+									"      for (const k of keys) if (k in x) return x[k];\r",
+									"      for (const v of Object.values(x)) {\r",
+									"        const r = (typeof v === 'object') ? findMessage(v) : null;\r",
+									"        if (r) return r;\r",
+									"      }\r",
+									"      return null;\r",
+									"    }\r",
+									"\r",
+									"    if (ct.includes('json')) {\r",
+									"      let j; try { j = JSON.parse(raw); } catch(e) { pm.expect.fail('Ошибка: не JSON'); }\r",
+									"      const msg = findMessage(j);\r",
+									"      const nonEmptyStruct = Array.isArray(j) ? j.length > 0\r",
+									"                                              : (j && typeof j === 'object' && Object.keys(j).length > 0);\r",
+									"      const ok =\r",
+									"        (typeof msg === 'string' && /\\S/.test(msg)) ||\r",
+									"        (Array.isArray(msg) && msg.length > 0) ||\r",
+									"        (msg && typeof msg === 'object' && Object.keys(msg).length > 0) ||\r",
+									"        nonEmptyStruct || /\\S/.test(raw);\r",
+									"\r",
+									"      pm.expect(ok, 'в JSON найдено описание или непустая структура').to.be.true;\r",
+									"    } else {\r",
+									"      pm.expect(/\\S/.test(raw), 'текст ошибки непустой').to.be.true;\r",
+									"    }\r",
+									"  });\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Время ответа < 1000ms\", () => {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Ответ не > 500KB\", () => {\r",
+									"  const len = +(pm.response.headers.get('Content-Length') || 0);\r",
+									"  // если заголовка нет — мягко считаем по длине текста (не идеально, но ок)\r",
+									"  const approx = len || (pm.response.text()?.length || 0);\r",
+									"  pm.expect(approx).to.be.below(500 * 1024);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; _ym_isad=2; _ym_visorc=w; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection={{sortDirection}}&sortField={{sortField}}&limit={{limit}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "{{sortDirection}}"
+								},
+								{
+									"key": "sortField",
+									"value": "{{sortField}}"
+								},
+								{
+									"key": "limit",
+									"value": "{{limit}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Листинг лидов с параметрами: `stage`, `sortField`, `sortDirection`, `limit`.  \nТесты проверяют код ответа (200/422), базовую структуру списка и нефункциональные флажки (время/размер).  \nМожно запускать с CSV для разных комбинаций параметров (Data-driven прогон).",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Leads — paging/sort",
+			"item": [
+				{
+					"name": "Auth (setup)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"login 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"token\", j.token || j.access_token);\r",
+									"\r",
+									"pm.test(\"token сохранён\", () => pm.expect(pm.environment.get(\"token\")).to.exist);\r",
+									"\r",
+									"// очистка артефактов прошлого прогона\r",
+									"[\"ids_p1\",\"ids_p2\",\"p1_last\",\"p2_first\",\"sig_p1\",\"sig_p2\"].forEach(k=>pm.environment.unset(k));\r",
+									"\r",
+									"// сигнатура текущих параметров списка\r",
+									"const sig = [\r",
+									"  pm.environment.get(\"stage\"),\r",
+									"  pm.environment.get(\"sortField\"),\r",
+									"  pm.environment.get(\"sortDesc\") || pm.environment.get(\"sortDirection\")\r",
+									"].join(\"|\");\r",
+									"pm.environment.set(\"sig\", sig);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; _ym_isad=2; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; _ym_visorc=w; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{login}}\",\"password\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authURL}}/api/v1/login",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list — page 1 (desc)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// ---------- helpers ----------\r",
+									"function safeJson() {\r",
+									"  try { return pm.response.json(); } catch (e) { return { data: [] }; }\r",
+									"}\r",
+									"function sigFromRequest() {\r",
+									"  const q = pm.request.url.query.toObject();\r",
+									"  return [q.stage, q.sortField, q.sortDirection].join(\"|\"); // например: process|createdAt|desc\r",
+									"}\r",
+									"\r",
+									"// ---------- проверки 200/структуры ----------\r",
+									"const json = safeJson();\r",
+									"\r",
+									"pm.test(\"200 OK\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"data — массив\", () => {\r",
+									"  pm.expect(Array.isArray(json.data)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// ---------- сорт внутри страницы (desc по createdAt) ----------\r",
+									"pm.test(\"p1: внутри страницы отсортировано по createdAt desc\", () => {\r",
+									"  const arr = json.data || [];\r",
+									"  for (let i = 1; i < arr.length; i++) {\r",
+									"    pm.expect(arr[i - 1].createdAt >= arr[i].createdAt,\r",
+									"      `idx ${i-1}/${i}: ${arr[i-1]?.createdAt} < ${arr[i]?.createdAt}`).to.be.true;\r",
+									"  }\r",
+									"});\r",
+									"\r",
+									"// ---------- сигнатура параметров и полезные артефакты ----------\r",
+									"pm.environment.set(\"sig\", sigFromRequest());\r",
+									"pm.environment.set(\"sig_p1\", pm.environment.get(\"sig\"));\r",
+									"\r",
+									"const data1 = (json.data || []);\r",
+									"pm.environment.set(\"ids_p1\", data1.map(x => x.id).join(','));\r",
+									"if (data1.length) {\r",
+									"  pm.environment.set(\"p1_last\", data1[data1.length - 1].createdAt);\r",
+									"}\r",
+									"\r",
+									"// карта createdAt: id -> createdAt\r",
+									"const ct1 = {};\r",
+									"data1.forEach(x => { if (x && x.id != null) ct1[x.id] = x.createdAt; });\r",
+									"pm.environment.set(\"ctimes_p1\", JSON.stringify(ct1));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "b7e9f986"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k; _ym_isad=2; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1NzQwMTI5NS43NzE1MTYsImV4cCI6MTc1NzU3NDA5NS43NzE1MTZ9.sU08YW7du5MPwd4NTtrlWFMOj-L0W-tRXa9KvcBZ3wI; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection=desc&sortField=createdAt&page=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list — page 2 (desc)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// ---------- helpers ----------\r",
+									"function safeJson() {\r",
+									"  try { return pm.response.json(); } catch (e) { return { data: [] }; }\r",
+									"}\r",
+									"function sigFromRequest() {\r",
+									"  const q = pm.request.url.query.toObject();\r",
+									"  return [q.stage, q.sortField, q.sortDirection].join(\"|\");\r",
+									"}\r",
+									"\r",
+									"// ---------- проверки 200/структуры ----------\r",
+									"const json = safeJson();\r",
+									"\r",
+									"pm.test(\"200 OK\", () => {\r",
+									"  pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"data — массив\", () => {\r",
+									"  pm.expect(Array.isArray(json.data)).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// ---------- сорт внутри страницы (desc по createdAt) ----------\r",
+									"pm.test(\"p2: внутри страницы отсортировано по createdAt desc\", () => {\r",
+									"  const arr = json.data || [];\r",
+									"  for (let i = 1; i < arr.length; i++) {\r",
+									"    pm.expect(arr[i - 1].createdAt >= arr[i].createdAt,\r",
+									"      `idx ${i-1}/${i}: ${arr[i-1]?.createdAt} < ${arr[i]?.createdAt}`).to.be.true;\r",
+									"  }\r",
+									"});\r",
+									"\r",
+									"// ---------- сигнатура и артефакты ----------\r",
+									"pm.environment.set(\"sig\", sigFromRequest());\r",
+									"pm.environment.set(\"sig_p2\", pm.environment.get(\"sig\"));\r",
+									"\r",
+									"const data2 = (json.data || []);\r",
+									"pm.environment.set(\"ids_p2\", data2.map(x => x.id).join(','));\r",
+									"if (data2.length) pm.environment.set(\"p2_first\", data2[0].createdAt);\r",
+									"\r",
+									"// карта createdAt: id -> createdAt\r",
+									"const ct2 = {};\r",
+									"data2.forEach(x => { if (x && x.id != null) ct2[x.id] = x.createdAt; });\r",
+									"pm.environment.set(\"ctimes_p2\", JSON.stringify(ct2));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "b7e9f986"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k; _ym_isad=2; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1NzQwMTI5NS43NzE1MTYsImV4cCI6MTc1NzU3NDA5NS43NzE1MTZ9.sU08YW7du5MPwd4NTtrlWFMOj-L0W-tRXa9KvcBZ3wI; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection=desc&sortField=createdAt&page=2",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "check — cross-page & границы",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// сверяем, что обе страницы дергались с одинаковыми параметрами\r",
+									"pm.test(\"Параметры p1/p2 совпадают\", () => {\r",
+									"  pm.expect(pm.environment.get(\"sig_p1\")).to.eql(pm.environment.get(\"sig_p2\"));\r",
+									"});\r",
+									"\r",
+									"// вытаскиваем наборы id и карты createdAt\r",
+									"const ids1 = (pm.environment.get(\"ids_p1\") || \"\").split(\",\").filter(Boolean);\r",
+									"const ids2 = (pm.environment.get(\"ids_p2\") || \"\").split(\",\").filter(Boolean);\r",
+									"const c1 = JSON.parse(pm.environment.get(\"ctimes_p1\") || \"{}\");\r",
+									"const c2 = JSON.parse(pm.environment.get(\"ctimes_p2\") || \"{}\");\r",
+									"const p1_last = pm.environment.get(\"p1_last\") || \"\";\r",
+									"const p2_first = pm.environment.get(\"p2_first\") || \"\";\r",
+									"\r",
+									"// базовые sanity-проверки на границу\r",
+									"pm.test(\"Граница: last(p1).createdAt ≥ first(p2).createdAt\", () => {\r",
+									"  if (!p1_last || !p2_first) return pm.expect(true).to.be.true; // пустые страницы — ок\r",
+									"  pm.expect(p1_last >= p2_first, `${p1_last} < ${p2_first}`).to.be.true;\r",
+									"});\r",
+									"\r",
+									"// находим дубли\r",
+									"const set2 = new Set(ids2);\r",
+									"const dupAll = ids1.filter(id => set2.has(id));\r",
+									"\r",
+									"// «граничные» дубли: id присутствует на обеих страницах,\r",
+									"// и у него одинаковый createdAt, равный p1_last (типичное перекрытие из-за равных таймстампов)\r",
+									"const dupBoundary = dupAll.filter(id => c1[id] === p1_last && c2[id] === p1_last);\r",
+									"\r",
+									"// «плохие» дубли — всё, что НЕ граничные\r",
+									"const dupBad = dupAll.filter(id => !dupBoundary.includes(id));\r",
+									"\r",
+									"// кладём отладку (если что — видно будет в Environment → dup_debug)\r",
+									"pm.environment.set(\"dup_debug\", JSON.stringify({ dupAll, dupBoundary, dupBad, p1_last, p2_first }));\r",
+									"\r",
+									"pm.test(\"Нет дублей id между page=1 и page=2 (кроме мягкой границы по одинаковому createdAt)\", () => {\r",
+									"  pm.expect(dupBad, `Дубли вне границы: ${dupBad.join(\",\")}`).to.eql([]);\r",
+									"});\r",
+									"\r",
+									"// просто пометка, что граничные дубли допустимы\r",
+									"pm.test(\"Граничные дубли допустимы (createdAt == p1_last)\", () => {\r",
+									"  pm.expect(true).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "b7e9f986"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k; _ym_isad=2; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1NzQwMTI5NS43NzE1MTYsImV4cCI6MTc1NzU3NDA5NS43NzE1MTZ9.sU08YW7du5MPwd4NTtrlWFMOj-L0W-tRXa9KvcBZ3wI; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection=desc&sortField=createdAt&page=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "list — sort asc (page 1)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"const arr = j.data || j.items || j.result || [];\r",
+									"\r",
+									"const toDate = s => new Date(String(s).replace(' ', 'T')).getTime() || 0;\r",
+									"pm.test(\"Внутри страницы отсортировано по createdAt asc\", () => {\r",
+									"  for (let i=1;i<arr.length;i++) {\r",
+									"    pm.expect(toDate(arr[i-1].createdAt) <= toDate(arr[i].createdAt)).to.be.true;\r",
+									"  }\r",
+									"});\r",
+									"\r",
+									"// Маленькая «сана-проверка»: состав не совпадает с page1 desc\r",
+									"const P1_IDS = JSON.parse(pm.environment.get(\"P1_IDS\") || \"[]\");\r",
+									"pm.test(\"Состав отличается от page1 desc (мягко)\", () => {\r",
+									"  const curr = new Set(arr.map(x=>x.id));\r",
+									"  // если полностью совпало — это странно\r",
+									"  const same = P1_IDS.length && P1_IDS.length === arr.length && P1_IDS.every(id => curr.has(id));\r",
+									"  pm.expect(same).to.be.false;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "b7e9f986"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k; _ym_isad=2; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1NzQwMTI5NS43NzE1MTYsImV4cCI6MTc1NzU3NDA5NS43NzE1MTZ9.sU08YW7du5MPwd4NTtrlWFMOj-L0W-tRXa9KvcBZ3wI; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection=asc&sortField=createdAt&page=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "asc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "negative — page=0",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Допускаем два поведения: 200 (как page=1) или 4xx\r",
+									"pm.test(\"Код 200 или 4xx на page=0\", () => {\r",
+									"  pm.expect([200,400,404,422]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Если 200 — мягко сравним с page=1\r",
+									"if (pm.response.code === 200) {\r",
+									"  const j = pm.response.json();\r",
+									"  const arr = j.data || j.items || j.result || [];\r",
+									"  const ids = arr.map(x=>x.id);\r",
+									"  const P1_IDS = JSON.parse(pm.environment.get(\"P1_IDS\") || \"[]\");\r",
+									"  const same = P1_IDS.length && P1_IDS.length === ids.length && P1_IDS.every((id, i) => id === ids[i]);\r",
+									"  pm.test(\"page=0 эквивалент page=1 (мягко)\", () => pm.expect(same).to.be.true);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "b7e9f986"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k; _ym_isad=2; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1NzQwMTI5NS43NzE1MTYsImV4cCI6MTc1NzU3NDA5NS43NzE1MTZ9.sU08YW7du5MPwd4NTtrlWFMOj-L0W-tRXa9KvcBZ3wI; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection=desc&sortField=createdAt&page=0",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "limit probe — limit=1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r",
+									"const j = pm.response.json();\r",
+									"const arr = j.data || j.items || j.result || [];\r",
+									"const defSize = Number(pm.environment.get(\"DEFAULT_PAGE_SIZE\") || 0);\r",
+									"\r",
+									"// Сервер либо уважает limit=1, либо режет до дефолтного размера (как у вас)\r",
+									"pm.test(\"limit=1 уважается ИЛИ режется до default page size\", () => {\r",
+									"  pm.expect([1, defSize]).to.include(arr.length);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "b7e9f986"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "x-user-id",
+								"value": "49"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2OTg3MDA0LjE5NjU3MiwiZXhwIjoxNzU3MTU5ODA0LjE5NjU3Mn0.vZQZvnnyd3X856ikZUwTv9pkc1iNT1zn-EXUM1-V6HM; firstVisitId=2398; test_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtdGVzdC5hbmZsYXQucnUiLCJqdGkiOiI0OSIsImlhdCI6MTc1NzMyNzk0My45OTAzMDgsImV4cCI6MTc1NzUwMDc0My45OTAzMDh9.q1ZydLUhRJ_rjKVPk-KxZMscJeJqswOVK6j522w7Z3k; _ym_isad=2; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1NzQwMTI5NS43NzE1MTYsImV4cCI6MTc1NzU3NDA5NS43NzE1MTZ9.sU08YW7du5MPwd4NTtrlWFMOj-L0W-tRXa9KvcBZ3wI; _ym_visorc=w"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/list?stage={{stage}}&sortDirection=desc&sortField=createdAt&limit=1",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"list"
+							],
+							"query": [
+								{
+									"key": "stage",
+									"value": "{{stage}}"
+								},
+								{
+									"key": "sortDirection",
+									"value": "desc"
+								},
+								{
+									"key": "sortField",
+									"value": "createdAt"
+								},
+								{
+									"key": "limit",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Leads — paging/sort\n\nЦель: убедиться, что листинг:  \n• реально сортируется по createdAt (asc/desc);  \n• постраничная навигация стабильна (нет дублей между p1 и p2, границы логичны);  \n• «краевые» значения page/limit обрабатываются предсказуемо (мягкие проверки).\n\nПравила:  \n• Базируемся на stage={{stage}} (env).  \n• baseline — page=1, sort=createdAt desc; дальше сравниваем p2/asc/негативы.  \n• Храним данные p1/p2 в переменных, проверяем пересечения и порядок.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"const url = pm.request.url.toString();\r",
+							"\r",
+							"if (url.includes('/api/v1/lead/list')) {\r",
+							"  pm.test(\"200 OK\", () => pm.response.to.have.status(200));\r",
+							"  const body = pm.response.json();\r",
+							"  const data = body.data ?? body;\r",
+							"  pm.test(\"data — массив\", () => pm.expect(Array.isArray(data)).to.be.true);\r",
+							"}\r",
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Leads — smoke (seed)",
+			"item": [
+				{
+					"name": "Auth (setup)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"login 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"const j = pm.response.json();\r",
+									"pm.environment.set(\"token\", j.token || j.access_token);\r",
+									"\r",
+									"pm.test(\"token сохранён\", () => pm.expect(pm.environment.get(\"token\")).to.exist);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "application/json, text/plain, */*"
+							},
+							{
+								"key": "accept-language",
+								"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+							},
+							{
+								"key": "cache-control",
+								"value": "no-cache"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://crm-test.anflat.ru"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://crm-test.anflat.ru/"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"Windows\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-site"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-commit-tag",
+								"value": "5d2cc8cf"
+							},
+							{
+								"key": "x-requested-with",
+								"value": "XMLHttpRequest"
+							},
+							{
+								"key": "Cookie",
+								"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; _ym_isad=2; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; _ym_visorc=w; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"email\":\"{{login}}\",\"password\":\"{{password}}\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{authURL}}/api/v1/login",
+							"host": [
+								"{{authURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "seed",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK (seed есть)\", () => pm.response.to.have.status(200));\r",
+									"const obj = (pm.response.json().data) ?? pm.response.json();\r",
+									"\r",
+									"// сохраним актуальный объект и будущий комментарий\r",
+									"pm.environment.set(\"seed_leadObj\", JSON.stringify(obj));\r",
+									"const run = pm.environment.get(\"RUN_ID\") || new Date().toISOString().replace('T',' ').slice(0,16);\r",
+									"pm.environment.set(\"seed_newComment\", `TEST RUN ${run}`);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{SEED_LEAD_ID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{SEED_LEAD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "seed (update comment)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// достаём seed-объект\r",
+									"let src = null;\r",
+									"try { src = JSON.parse(pm.environment.get(\"seed_leadObj\") || \"\"); } catch(e) {}\r",
+									"if (!src) {\r",
+									"  // на всякий случай — если не успела сохраниться переменная\r",
+									"  postman.setNextRequest(\"seed\"); // имя твоего GET-шагa\r",
+									"  return;\r",
+									"}\r",
+									"\r",
+									"// минимально достаточный payload под твой бэк\r",
+									"const payload = {\r",
+									"  id: src.id,\r",
+									"  personId: src.person?.id,\r",
+									"  responsibleUserId: src.responsibleUserId ?? Number(pm.environment.get(\"responsibleUserId\")),\r",
+									"  name: src.name,\r",
+									"  comment: pm.environment.get(\"seed_newComment\"),\r",
+									"  status: src.status ? { id: src.status.id } : undefined,\r",
+									"  source: src.source ? { id: src.source.id } : undefined\r",
+									"};\r",
+									"// убрать undefined-поля\r",
+									"Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);\r",
+									"\r",
+									"// установить тело запроса\r",
+									"pm.request.body.raw = JSON.stringify(payload);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200/204 OK на update\", () => pm.expect([200,204]).to.include(pm.response.code));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-User-Id",
+								"value": "49",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{SEED_LEAD_ID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{SEED_LEAD_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "seed (verify)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"200 OK (verify)\", () => pm.response.to.have.status(200));\r",
+									"const obj = (pm.response.json().data) ?? pm.response.json();\r",
+									"pm.test(\"Комментарий действительно обновился\", () => {\r",
+									"  pm.expect(String(obj.comment || \"\")).to.eql(String(pm.environment.get(\"seed_newComment\")));\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/api/v1/lead/{{SEED_LEAD_ID}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"lead",
+								"{{SEED_LEAD_ID}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Быстрый «жив ли сервис» прогон без побочных эффектов. Работаем с фиксированным лидом `SEED_LEAD_ID`:  \nGET (считать) → PUT (поменять комментарий) → GET (проверить, что обновился).  \nИспользуется для короткой проверки после деплоя/смены конфигурации.",
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"if (!pm.environment.get('RUN_ID')) {\r",
+							"  const ts = new Date().toISOString().replace(/[:T]/g,'-').slice(0,16);\r",
+							"  pm.environment.set('RUN_ID', ts);\r",
+							"}\r",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Auth (setup)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"login 200\", () => pm.response.to.have.status(200));\r",
+							"const j = pm.response.json();\r",
+							"pm.environment.set(\"token\", j.token || j.access_token);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "accept",
+						"value": "application/json, text/plain, */*"
+					},
+					{
+						"key": "accept-language",
+						"value": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+					},
+					{
+						"key": "cache-control",
+						"value": "no-cache"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json"
+					},
+					{
+						"key": "origin",
+						"value": "https://crm-test.anflat.ru"
+					},
+					{
+						"key": "priority",
+						"value": "u=1, i"
+					},
+					{
+						"key": "referer",
+						"value": "https://crm-test.anflat.ru/"
+					},
+					{
+						"key": "sec-ch-ua",
+						"value": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\""
+					},
+					{
+						"key": "sec-ch-ua-mobile",
+						"value": "?0"
+					},
+					{
+						"key": "sec-ch-ua-platform",
+						"value": "\"Windows\""
+					},
+					{
+						"key": "sec-fetch-dest",
+						"value": "empty"
+					},
+					{
+						"key": "sec-fetch-mode",
+						"value": "cors"
+					},
+					{
+						"key": "sec-fetch-site",
+						"value": "same-site"
+					},
+					{
+						"key": "user-agent",
+						"value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36"
+					},
+					{
+						"key": "x-commit-tag",
+						"value": "5d2cc8cf"
+					},
+					{
+						"key": "x-requested-with",
+						"value": "XMLHttpRequest"
+					},
+					{
+						"key": "Cookie",
+						"value": "tmr_lvid=57dad620637ad22f2107c858edfb80a7; tmr_lvidTS=1748848333250; _ym_uid=1748848333373081788; _ym_d=1748848333; _ga=GA1.2.915608617.1748848334; __utmc=156031339; __utmz=156031339.1749454426.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _fbp=fb.1.1749454427013.833039835404239186; __utma=156031339.915608617.1748848334.1753687091.1753864582.6; _ga_7NKCBMT987=GS2.2.s1753864583$o57$g0$t1753864583$j60$l0$h0; _ym_debug=1; carrotquest_device_guid=edaf64dd-c56f-4f3d-9566-bba08782ca83; carrotquest_uid=2046997625021924178; carrotquest_auth_token=user.2046997625021924178.68917-1609d8fedf6e44e157b3a727be.13f5c6377f287dade715ada044751891f73c89abb9123c9e; carrotquest_realtime_services_transport=wss; carrotquest_closed_part_id=2046997660002418728; _ym_isad=2; firstVisitId=2398; user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGguYW5mbGF0LnJ1IiwianRpIjoiNzU0OSIsImlhdCI6MTc1Njc5OTI2MC44MDU1MDUsImV4cCI6MTc1Njk3MjA2MC44MDU1MDV9.7ZBuY35itih9GLfGEMrTxM-2IibZ-wJbJI0Duvwy-SU; _ym_sup_debug=1; _ym_visorc=w; beta_user_token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2F1dGgtYmV0YS5hbmZsYXQucnUiLCJqdGkiOiI3NTQ5IiwiaWF0IjoxNzU2ODAyOTY2LjAzMzY2MiwiZXhwIjoxNzU2OTc1NzY2LjAzMzY2Mn0.2oz2NLjnnqbhik3fns5yKYiWTUeDLeHi6c6JItbQhPQ"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"{{login}}\",\"password\":\"{{password}}\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{authURL}}/api/v1/login",
+					"host": [
+						"{{authURL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// Не трогаем логин — он без токена\r",
+					"if ((pm.request.url.toString() || \"\").includes(\"/api/v1/login\")) { return; }\r",
+					"\r",
+					"// очистим старые дубли\r",
+					"pm.request.headers.remove(\"Authorization\");\r",
+					"\r",
+					"// подставим токен и X-User-Id, если есть\r",
+					"const t = pm.environment.get(\"token\");\r",
+					"if (t) pm.request.headers.upsert({ key: \"Authorization\", value: \"Bearer \" + t });\r",
+					"\r",
+					"const uid = pm.environment.get(\"userId\");\r",
+					"if (uid) pm.request.headers.upsert({ key: \"X-User-Id\", value: String(uid) });\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
