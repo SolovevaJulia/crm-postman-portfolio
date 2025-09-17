@@ -133,5 +133,6 @@
 ## Контакты
 
 Автор: Юлия — Manual QA (CRM/Real-Estate).  
-Связь: через Issues репозитория или по запросу.
+Связь: j.soloveva87@yandex.r, Телеграм: https://t.me/july_nightingale.
+
 
